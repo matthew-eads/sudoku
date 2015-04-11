@@ -1,0 +1,95 @@
+#!/bin/sh
+
+echo "----------------"
+if [[ $1 == "valgrind" || $1 == "callgrind" || $1 == "callgrind.out." ]]
+	then
+	tests=valgrind
+elif [[ $# == 1 && $1 != "all" ]]
+	then
+	tests=$1
+elif [[ $1 == "16" ]]
+	then
+	tests=16
+elif [[ $1 == "25" ]]
+	then
+	tests=25
+elif [[ $1 == "extra" ]]
+	then
+	tests=extra
+else
+	tests=all
+fi
+
+if [[ $# == 2 || $tests == valgrind ]]
+	then
+	command="valgrind --tool=callgrind --dump-instr=yes"
+	format=""
+        $command ./sudoku sudoku.easy > /dev/null
+	exit
+else
+	command="/usr/bin/time -f"
+	format="\"Easy:   %U \""
+fi
+
+if [[ $tests == valgrind || $tests == "midmark" || $tests == "midmark.um" || $tests == all ]] 
+	then
+#	echo "Testing on easy:"
+#	echo $format
+        $command "Easy:    %U" ./sudoku sudoku.easy > /dev/null
+	echo "----------------"
+fi
+
+if [[ $tests == all || $tests == "advent" || $tests == "advent." ]]
+	then
+#        echo "Testing on medium:"
+	/usr/bin/time -f "Medium:  %U" ./sudoku sudoku.medium > /dev/null
+	echo "----------------"
+fi
+
+if [[ $tests == all || $tests == "sandmark" || $tests == "sandmark." ]]
+	then
+#        echo "Testing on hard:"
+	/usr/bin/time -f "Hard:    %U" ./sudoku sudoku.hard > /dev/null
+	echo "----------------"
+fi
+
+if [[ $tests == all || $tests == "sandmark" || $tests == "sandmark." ]]
+	then
+#        echo "Testing on hard:"
+	/usr/bin/time -f "Tough:    %U" ./sudoku sudoku.tough > /dev/null
+	echo "----------------"
+fi
+
+if [[ $tests == 16 ]]
+	then
+	/usr/bin/time -f "Sixteen:    %U" ./sudoku sudoku.16 > /dev/null
+	
+fi
+
+if [[ $tests == 25 ]]
+	then
+	/usr/bin/time -f "Twenty-five:    %U" ./sudoku sudoku.25 > sudoku.25.soln
+	
+fi
+
+if [[ $tests == all ]]
+	then
+	./sudoku sudoku.easy | ./check_soln
+	./sudoku sudoku.medium | ./check_soln
+	./sudoku sudoku.hard | ./check_soln
+	./sudoku sudoku.tough | ./check_soln
+fi
+
+if [[ $tests == extra ]]
+	then
+	echo "Running full correctness tests"
+	./sudoku sudoku.easy | ./check_soln
+	./sudoku sudoku.medium | ./check_soln
+	./sudoku sudoku.hard | ./check_soln
+	./sudoku sudoku.tough | ./check_soln
+	./sudoku sudoku.1.29 | ./check_soln
+	./sudoku sudoku.2.13 | ./check_soln
+	./sudoku sudoku.2.26 | ./check_soln
+	echo "Finished all tests"
+	echo "----------------"
+fi

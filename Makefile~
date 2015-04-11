@@ -1,0 +1,12 @@
+#
+# Makefile for Sudoku solver
+#
+CXX = g++
+FLAGS =  -g -Wall -Wall -Wextra -pedantic 
+
+all: sudoku.cpp
+	${CXX} ${FLAGS} -o sudoku sudoku.cpp
+
+clean:
+	rm -f sudoku
+

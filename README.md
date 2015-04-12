@@ -8,5 +8,5 @@ in sudoku.cpp, and recompile using make.
 
 The algorithms and results are discussed in more detail in sudoku.pdf
 
-Many features of this solver were provided by Prof. Anself Blumer (the
+Many features of this solver were provided by Prof. Anselm Blumer (the
 solver was an assignment for his AI class)
